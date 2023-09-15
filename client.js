@@ -7,9 +7,10 @@ loginButton.addEventListener('click', function () {
     window.location.href = 'login.html'; // Replace with the actual URL of the login page
 });
 // client.js
-const homeLink = document.getElementById('home-link');
+/*const homeLink = document.getElementById('home-link');
 
 homeLink.addEventListener('click', function (event) {
   event.preventDefault(); // Prevent the default behavior of the link
   window.location.href = '/files/index.html'; // Redirect to index.html
 });
+*/

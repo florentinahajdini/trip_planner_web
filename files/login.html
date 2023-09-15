@@ -14,7 +14,7 @@
             <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
             <ul>
                 <li>
-                    <a id="home-link" href="">Home</a></li>
+                    <a href="index.html">Home</a></li>
                 <li><a href="#">Impressum</a></li>
             </ul>
         </div>
@@ -22,13 +22,14 @@
             <img class="loginPic" src="/graphics/login.png">
             <h1>Login here</h1>
             <form action="/login" method="POST" onsubmit="return validateForm()">
-                <p>Username</p>
-                <input type="email" name="email" id="email" placeholder="Enter Username" required>
+                <p>Email</p>
+                <input type="text" name="email" id="email" placeholder="Enter Email" required>
                 <p>Password</p>
                 <input type="password" name="password" id="password" placeholder="Enter Password" required>
                 <input type="submit" value="Login"><br>
                 <a href="#">Forgot your password?</a><br>
             </form>
+            
             <form action="/signup" method="GET">
                 <a href="/signup">Sign up here</a>
             </form>
@@ -38,22 +39,22 @@
     <script src="client.js"></script>
     <script>
         function validateForm() {
-            var email = document.getElementById("email").value;
+            var name = document.getElementById("name").value; // Change 'email' to 'name'
             var password = document.getElementById("password").value;
-
-            if (email === '' || password === '') {
+    
+            if (name === '' || password === '') {
                 alert("Please fill in both the username and password fields.");
                 return false;
             }
-
+    
             // Send the credentials to the server for authentication
-            authenticateUser(email, password);
+            authenticateUser(name, password);
         }
-
-        function authenticateUser(email, password) {
+    
+        function authenticateUser(name, password) {
             
             axios.post('/login', {
-                email: email,
+                name: name, // Change 'email' to 'name'
                 password: password
             })
             .then(function(response) {
@@ -61,7 +62,7 @@
                 // Store the token in localStorage or sessionStorage
                 // For example, using localStorage:
                 localStorage.setItem('token', token);
-
+    
                 // Redirect the user to the authenticated page
                 window.location.href = '/authenticated-page';
             })
@@ -69,8 +70,9 @@
                 console.error(error);
                 alert('Failed to authenticate. Please check your credentials and try again.');
             });
-        }
+        }    
     </script>
+    
 </body>
 
 </html>

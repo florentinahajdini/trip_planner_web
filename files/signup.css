@@ -98,7 +98,7 @@ h1 {
 
 .registerbox input[type="email"],
 .registerbox input[type="password"],
-.registerbox input[type="username"] {
+.registerbox input[type="text"] {
     border: none;
     border-bottom: 1px solid #fff;
     background: transparent;

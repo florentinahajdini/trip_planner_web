@@ -1,0 +1,232 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+.banner{
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.75),
+     rgba(0,0,0,0.75)),
+    url(../graphics/backgroundMaybe.jpg);
+    background-size: cover;
+    background-position: center;
+}
+.navbar{
+    width: 85%;
+    margin: auto;
+    padding: 35px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.logo{
+    width: 120px;
+    cursor: pointer;
+}
+.navbar ul li{
+list-style: none;
+display: inline-block;
+margin: 0 20px;
+position: relative;
+}
+.navbar ul li a{
+    text-decoration: none;
+    color: #fff;
+    text-transform: uppercase;
+}
+.navbar ul li::after{
+    content: '';
+    height: 3px;
+    width: 0;
+    background: #539fe3;
+    position: absolute;
+    left: 0;
+    bottom: -10px;
+    transition: 0.5s;
+}
+.navbar ul li:hover::after{
+    width: 100%;
+}
+
+button{
+    width: 70px;
+    padding: 10px 0;
+    text-align: center;
+    margin: 10px 5px;
+    border-radius: 25px;
+    font-weight: bold;
+    border: 2px solid #539fe3;
+    background: transparent;
+    color: #000;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+span{
+    background: #539fe3;
+    height: 100%;
+    width: 0;
+    border-radius: 25px;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: -1;
+    transition: 0.5s;
+}
+button:hover span{
+    width: 100%;
+
+}
+button:hover{
+    border: none;
+}
+.container{
+display: flex;
+column-gap: 20px;
+
+}
+.left-box{
+    width:350px;
+    height: 450px;
+    color: #539fe3;
+    padding: 20px;
+    margin-left: 20px;
+    border-radius: 10px;
+    border: 2px solid #539fe3;
+    background: linear-gradient(135 deg, #539fe3, #607c94);
+}
+.left-box button{
+        border: none;
+        outline: none;
+        height: 40px;
+        background: #539fe3;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 20px;
+
+}
+
+.left-box button:hover{
+    cursor:pointer;
+    background: #a358b2;
+    color:#000;
+}
+.search {
+    height: 20%;
+  
+}
+.search input{
+    border: 0;
+    outline: 0;
+    background: #fff;
+    color: #539fe3;
+    padding: 8px 12px;
+    height: 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+
+}
+.left-box h3{
+    margin-bottom: 0px;
+}
+.city-list{
+    list-style-type: none;
+}
+.right-box{
+    width: 1200px;
+    height: auto;
+    color: #539fe3;
+   background-color: #607c94;
+    border-radius: 10px;
+    border: 2px solid #539fe3;
+    float:left;
+    background: linear-gradient(135 deg, #539fe3, #607c94);
+}
+
+
+.myPdf{
+    width: 200px;
+    height: 160px;
+}
+.mytabs {
+    display: flex;
+    flex-wrap: wrap;
+    width: 800px;
+    height:450px;
+    margin: 20px ;
+    padding: 0px;
+}
+.mytabs input[type="radio"] {
+    display: none;
+}
+.mytabs label {
+    padding: 25px;
+    background: #e2e2e2;
+    font-weight: bold;
+    border-radius: 25px;
+}
+
+.mytabs .tab {
+    width: 90%;
+    padding: 8px;
+    background: none;
+    order: 1;
+    display: none;
+}
+.mytabs .tab h2 {
+    font-size: 0.9em;
+}
+
+.mytabs input[type='radio']:checked + label + .tab {
+    display: block;
+}
+
+.mytabs input[type="radio"]:checked + label {
+    background: #fff;
+}
+.weather input[value='GetWeather']{
+        border: none;
+        outline: none;
+        height: 40px;
+        width: 130px;
+        background: #539fe3;
+        color: #fff;
+        font-size: 14px;
+        border-radius: 20px;
+
+}
+
+.weather input[value='GetWeather']:hover{
+    cursor:pointer;
+    background: #a358b2;
+    color:#000;
+}
+.weather input[type='search']{
+        border: 0;
+        outline: 0;
+        background: #fff;
+        color: #539fe3;
+        padding: 8px 12px;
+        height: 20px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: bold;
+    
+    
+}
+
+.popup-box {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  width: 200px;
+  height: 100px;
+  padding: 10px;
+  border: 2px solid #539fe3;
+  border-radius: 10px;
+}
