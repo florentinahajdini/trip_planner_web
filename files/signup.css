@@ -1,18 +1,19 @@
-*{
+/* Reset some default styles for specific elements */
+body, h1, p {
     margin: 0;
     padding: 0;
-    font-family: sans-serif;
 }
-.banner{
+
+.banner {
     width: 100%;
     height: 100vh;
-    background-image: linear-gradient(rgba(0,0,0,0.75),
-     rgba(0,0,0,0.75)),
-    url(../graphics/backgroundMaybe.jpg);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
+        url(/graphics/backgroundMaybe.jpg);
     background-size: cover;
     background-position: center;
 }
-.navbar{
+
+.navbar {
     width: 85%;
     margin: auto;
     padding: 35px 0;
@@ -20,22 +21,26 @@
     align-items: center;
     justify-content: space-between;
 }
-.logo{
+
+.logo {
     width: 120px;
     cursor: pointer;
 }
-.navbar ul li{
-list-style: none;
-display: inline-block;
-margin: 0 20px;
-position: relative;
+
+.navbar ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 0 20px;
+    position: relative;
 }
-.navbar ul li a{
+
+.navbar ul li a {
     text-decoration: none;
     color: #fff;
     text-transform: uppercase;
 }
-.navbar ul li::after{
+
+.navbar ul li::after {
     content: '';
     height: 3px;
     width: 0;
@@ -45,24 +50,26 @@ position: relative;
     bottom: -10px;
     transition: 0.5s;
 }
-.navbar ul li:hover::after{
+
+.navbar ul li:hover::after {
     width: 100%;
 }
-.registerbox{
+
+.registerbox {
     width: 320px;
-    height: 480px;
+    height: 460px;
     background: #000;
     color: #fff;
     top: 50%;
-    left:50%;
+    left: 50%;
     position: absolute;
     transform: translate(-50%, -50%);
     box-sizing: border-box;
     padding: 70px 30px;
     border-radius: 10px;
-
 }
-.loginPic{
+
+.loginPic {
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -70,32 +77,38 @@ position: relative;
     top: -50px;
     left: calc(50% - 50px);
 }
-h1{
-    margin:0;
+
+h1 {
+    margin: 0;
     padding: 0 0 20px;
     text-align: center;
     font-size: 22px;
 }
-.register-box p{
+
+.registerbox p {
     margin: 0;
     padding: 0;
     font-weight: bold;
 }
-.register-box input{
-    width:100%;
+
+.registerbox input {
+    width: 100%;
     margin-bottom: 20px;
 }
-.register-box input[type="text"], input[type="password"],input[type="email"]{
-    border:none;
+
+.registerbox input[type="email"],
+.registerbox input[type="password"],
+.registerbox input[type="username"] {
+    border: none;
     border-bottom: 1px solid #fff;
     background: transparent;
     outline: none;
-    height:40px;
+    height: 40px;
     color: #fff;
     font-size: 15px;
-
 }
-.register-box input[type="submit"]{
+
+.registerbox input[type="submit"] {
     border: none;
     outline: none;
     height: 40px;
@@ -104,155 +117,26 @@ h1{
     font-size: 18px;
     border-radius: 20px;
 }
-.register-box input[type="submit"]:hover{
-    cursor:pointer;
-    background: #a358b2;
-    color:#000;
-}
-.register-box a{
-    text-decoration: none;
-    font-size: 12px;
-    line-height: 20px;
-    color: darkgrey;
-}
-.register-box a:hover{
-    color:#a358b2;
-    ;
-    
-}
 
-@media(max-width: 700px){
-    .register-box{
-        justify-content: center;
-    }
-}
-
-*{
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-}
-.banner{
-    width: 100%;
-    height: 100vh;
-    background-image: linear-gradient(rgba(0,0,0,0.75),
-     rgba(0,0,0,0.75)),
-    url(../graphics/backgroundMaybe.jpg);
-    background-size: cover;
-    background-position: center;
-}
-.navbar{
-    width: 85%;
-    margin: auto;
-    padding: 35px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.logo{
-    width: 120px;
+.registerbox input[type="submit"]:hover {
     cursor: pointer;
-}
-.navbar ul li{
-list-style: none;
-display: inline-block;
-margin: 0 20px;
-position: relative;
-}
-.navbar ul li a{
-    text-decoration: none;
-    color: #fff;
-    text-transform: uppercase;
-}
-.navbar ul li::after{
-    content: '';
-    height: 3px;
-    width: 0;
-    background: #539fe3;
-    position: absolute;
-    left: 0;
-    bottom: -10px;
-    transition: 0.5s;
-}
-.navbar ul li:hover::after{
-    width: 100%;
-}
-.register-box{
-    width: 320px;
-    height: 450px;
-    background: #000;
-    color: #fff;
-    top: 50%;
-    left:50%;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    box-sizing: border-box;
-    padding: 70px 30px;
-    border-radius: 10px;
-
-}
-.loginPic{
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    position: absolute;
-    top: -50px;
-    left: calc(50% - 50px);
-}
-h1{
-    margin:0;
-    padding: 0 0 20px;
-    text-align: center;
-    font-size: 22px;
-}
-.register-box p{
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
-}
-.register-box input{
-    width:100%;
-    margin-bottom: 20px;
-}
-.register-box input[type="text"], input[type="password"]{
-    border:none;
-    border-bottom: 1px solid #fff;
-    background: transparent;
-    background: transparent;
-    outline: none;
-    height:40px;
-    color: #fff;
-    font-size: 15px;
-
-}
-.register-box input[type="submit"]{
-    border: none;
-    outline: none;
-    height: 40px;
-    background: #539fe3;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 20px;
-}
-.register-box input[type="submit"]:hover{
-    cursor:pointer;
     background: #a358b2;
-    color:#000;
+    color: #000;
 }
-.register-box a{
+
+.registerbox a {
     text-decoration: none;
     font-size: 12px;
     line-height: 20px;
     color: darkgrey;
 }
-.register-box a:hover{
-    color:#a358b2;
-    
-    
+
+.registerbox a:hover {
+    color: #a358b2;
 }
 
-@media(max-width: 700px){
-    .loginbox{
-        justify-content: center;
+@media (max-width: 700px) {
+    .registerbox {
+        text-align: center;
     }
 }

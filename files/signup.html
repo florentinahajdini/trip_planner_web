@@ -3,74 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width= device-width, initial-scale=1.0">
     <title>Trip Planner</title>
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="signup.css">
 </head>
 
 <body>
     <div class="banner">
-        <div class="navbar">
-            <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
-            <ul>
-                <li><a href='index.html'>Home</a></li>
-                <li><a href="#">Impressum</a></li>
-            </ul>
-        </div>
-        <div class="loginbox">
-            <img src="../graphics/login.png" class="loginPic">
-            <h1>Login here</h1>
-            <form id="loginForm">
-                <p>Username</p>
-                <input type="email" name="email" id="email" placeholder="Enter Username" required>
-                <p>Password</p>
-                <input type="password" name="password" id="password" placeholder="Enter Password" required>
-                <input type="submit" value="Login"><br>
-                <a href="#">Forgot your password?</a><br>
-            </form>
-            <form action="signup.html" method="GET">
-                <a href="signup.html">Sign up here</a>
-            </form>
-        </div>
+    <div class="navbar">
+        <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
+        <ul>
+            <li><a href='../views/index.html'>Home</a></li>
+            <li><a href="#">Impressum</a></li>
+        </ul>
+    </div>
+    <div class="registerbox">
+        <img src="../graphics/login.png" class="loginPic">
+        <h1>Sign up here</h1>
+        <form action="/signup" method="POST">
+            <p>Username</p>
+            <input type="username" name="" placeholder="Enter Username">
+            <p>Password</p>
+            <input type="password" name="" placeholder="Enter Password">
+            <p>Email</p>
+            <input type="email" name="" placeholder="Enter Email" required>
+
+            <input type="submit" name="" value="Create Account" onclick="window.location.href = '../views/dashboard.ejs';"><br>
+    
+
+        </form>
+            <a href="login.html">Login here</a>
+    
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            var email = document.getElementById("email").value;
-            var password = document.getElementById("password").value;
-
-            if (email === '' || password === '') {
-                alert("Please fill in both the username and password fields.");
-                return;
-            }
-
-            // Send the credentials to the server for authentication
-            authenticateUser(email, password);
-        });
-
-        function authenticateUser(email, password) {
-            axios.post('/login', {
-                    email: email,
-                    password: password
-                })
-                .then(function(response) {
-                    var token = response.data.token; // Assuming the server sends the token as 'token' in the response
-
-                    // Store the token in localStorage
-                    localStorage.setItem('token', token);
-
-                    // Redirect the user to the authenticated page
-                    window.location.href = '/authenticated-page';
-                })
-                .catch(function(error) {
-                    console.error(error);
-                    alert('Failed to authenticate. Please check your credentials and try again.');
-                });
-        }
-    </script>
 </body>
 
 </html>

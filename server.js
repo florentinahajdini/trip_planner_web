@@ -19,6 +19,11 @@ app.get('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'files', 'login.html'));
     console.log('HELOOOOOO')
 });
+// Serve the login page when /login is accessed
+app.get('/signup', (req, res) => {
+  res.sendFile(path.join(__dirname, 'files', 'signup.html'));
+});
+
 
 
 // GET REQUEST USERS
