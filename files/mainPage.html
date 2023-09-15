@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Planner</title>
+  <link rel="stylesheet" href="../css/mainPage.css">
+  <script src="../javascript/weather.js"></script>
+  <style>
+    .popup_box {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      width: 200px;
+      height: 100px;
+      padding: 10px;
+      border: 2px solid #539fe3;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="banner">
+    <div class="navbar">
+      <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
+      <ul>
+        <li><a href='../views/index.html'>Home</a></li>
+        <li><a href="#">Impressum</a></li>
+      </ul>
+    </div>
+    <div class="container">
+      <div class="left-box">
+        <h3>Your destinations</h3><br>
+        <div class="search">
+          <input type="text" placeholder="Enter city name" spellcheck="false">
+          <button class="add-button">Add Trip</button>
+        </div>
+        <ul id="cityList" class="city-list">
+          <li class="city" onclick="showPopup('Lima')">Lima</li>
+          <li class="city" onclick="showPopup('Lisbon')">Lisbon</li>
+          <li class="city" onclick="showPopup('Barcelona')">Barcelona</li>
+        </ul>
+      </div>
+      <div class="right-box">
+        <div class="popup_box"></div>
+        <div class="mytabs">
+          <input type="radio" id="tabBookings" name="mytabs" checked="checked">
+          <label for="tabBookings">Bookings</label>
+          <div class="tab">
+            <h2></h2>
+            <iframe id="myPdf" src="../graphics/barcelonaBooking.pdf" frameborder="0"></iframe>
+          </div>
+          <input type="radio" id="tabWeather" name="mytabs">
+          <label for="tabWeather">Weather</label>
+          <div class="tab">
+            <h2></h2>
+            <div class="weather">
+              <input type="search" class="weather_search" id="query" placeholder="Your City">
+              <input value="GetWeather" id="button" onclick="updateWeather()" type="submit">
+              <div class="weather_today">
+                <div class="weather_details">
+                  <h2 class="weather_city" id="weather_city">City</h2>
+                  <p class="weather_day" id="weather_day">Day</p>
+                  <div class="weather_current">
+                    <p class="weather_indicator weather_indicator--humidity"><span class="value" id="humidity">50</span>%</p>
+                    <p class="weather_indicator weather_indicator--wind"><span class="value" id="wind">West, 5</span>m/s</p>
+                    <p class="weather_indicator weather_indicator--pressure"><span class="value" id="pressure">1050</span>hPA</p>
+                  </div>
+                  <img src="" alt="Clear sky" class="weather_image">
+                  <img src="../graphics/weather.jpeg" class="weather-icons"><span class="value" id="temperature">+25</span> &deg;C
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="radio" id="tabCurrency" name="mytabs">
+          <label for="tabCurrency">Currency</label>
+          <div class="tab">
+            <h2>Currency</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    function showPopup(cityName) {
+      const popupBox = document.querySelector('.popup_box');
+      popupBox.textContent = `You clicked on ${cityName}`;
+      popupBox.style.display = 'block';
+    }
+  </script>
+  <script src="/server.js" type="module"></script>
+</body>
+
+</html>
