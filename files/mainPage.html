@@ -6,21 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trip Planner</title>
   <link rel="stylesheet" href="mainPage.css">
-  <style>
-    .popup_box {
-      display: none;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: white;
-      width: 200px;
-      height: 100px;
-      padding: 10px;
-      border: 2px solid #539fe3;
-      border-radius: 10px;
-    }
-  </style>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Google Maps JavaScript library -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyC4ePiIwnNBHH2sOTJylXzNfiAlWt0w-IY"></script>
+
 </head>
 
 <body>
@@ -37,12 +27,14 @@
         <h3>Your destinations</h3><br>
         <div class="search">
           <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
+          <div id="citySuggestions" class="city-suggestions"></div>
           <button class="add-button" id="addButton">Add Trip</button>
         </div>
         <ul id="cityList" class="city-list">
           <!-- City items will be added dynamically here -->
         </ul>
       </div>
+
       <div class="right-box">
         <div class="popup_box"></div>
         <div class="mytabs">
@@ -138,6 +130,24 @@ const addButton = document.getElementById('addButton');
 addButton.addEventListener('click', addCity);
 </script>
   <script src="/server.js" type="module"></script>
+  <script src="/api.js" type="module"></script>
+  <script async
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4ePiIwnNBHH2sOTJylXzNfiAlWt0w-IY&libraries=places&callback=initMap">
+</script>
+
+<script>
+  var searchInput= 'cityInput';
+  $(document).ready(function(){
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('cityInput')),{
+      types: ['geocode'],
+    
+    });
+    google.maps.event.addListener(autocomplete, 'place_changed', function(){
+      var near_place = autocomplete.getPlace();
+    });
+  }); 
+</script>
 </body>
 
 </html>

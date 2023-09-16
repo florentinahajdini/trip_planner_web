@@ -105,7 +105,8 @@ column-gap: 20px;
         color: #fff;
         font-size: 14px;
         border-radius: 20px;
-
+        cursor: pointer;
+        margin-left: 10px;
 }
 
 .left-box button:hover{
@@ -115,6 +116,9 @@ column-gap: 20px;
 }
 .search {
     height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   
 }
 .search input{
@@ -223,18 +227,4 @@ column-gap: 20px;
         font-weight: bold;
     
     
-}
-
-.popup-box {
-  display: none;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  width: 200px;
-  height: 100px;
-  padding: 10px;
-  border: 2px solid #539fe3;
-  border-radius: 10px;
 }
