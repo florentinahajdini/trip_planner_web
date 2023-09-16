@@ -126,7 +126,8 @@ app.get("/weather", async (req, res) => {
            "wind": result.data.wind.speed,
            "city": result.data.name,
            "day": new Date().toLocaleDateString('en-EN', {"weekday": "long"}),
-           "humidity": result.data.main.humidity
+           "humidity": result.data.main.humidity,
+           "pressure": result.data.main.pressure
         };         
         res.json(JSON.stringify(filteredweatherData))
         console.log(result.data);

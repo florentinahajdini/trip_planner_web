@@ -12,15 +12,17 @@ fetch("/weather?city=" + city)
         let humidity = document.getElementById("humidity");
         let wind = document.getElementById("wind");
         let temperature = document.getElementById("temperature");
+        let pressure = document.getElementById("pressure");
 
         console.log(data)
         console.log(data["temperature"])
 
-        temperature.innerHTML = data["temperature"];
-        wind.innerHTML = data["wind"] + "%";
+        temperature.innerHTML = "Temperature: " + data["temperature"] + "°C";
+        wind.innerHTML = "Wind Speed: " + data["wind"] + "m/s";
         city.innerHTML = data["city"];
         day.innerHTML = data["day"];
-        humidity.innerHTML = data["humidity"];
+        humidity.innerHTML = "Humidity:" + data["humidity"] + "%";
+        pressure.innerHTML = "Pressure: " + data["pressure"] + "hPA";
     })
     .catch(error => {
         console.log(error);
