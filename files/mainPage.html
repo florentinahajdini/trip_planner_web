@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trip Planner</title>
   <link rel="stylesheet" href="mainPage.css">
-  <script src="../javascript/weather.js"></script>
   <style>
     .popup_box {
       display: none;
@@ -37,13 +36,11 @@
       <div class="left-box">
         <h3>Your destinations</h3><br>
         <div class="search">
-          <input type="text" placeholder="Enter city name" spellcheck="false">
-          <button class="add-button">Add Trip</button>
+          <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
+          <button class="add-button" id="addButton">Add Trip</button>
         </div>
         <ul id="cityList" class="city-list">
-          <li class="city" onclick="showPopup('Lima')">Lima</li>
-          <li class="city" onclick="showPopup('Lisbon')">Lisbon</li>
-          <li class="city" onclick="showPopup('Barcelona')">Barcelona</li>
+          <!-- City items will be added dynamically here -->
         </ul>
       </div>
       <div class="right-box">
@@ -87,12 +84,59 @@
     </div>
   </div>
   <script>
-    function showPopup(cityName) {
-      const popupBox = document.querySelector('.popup_box');
-      popupBox.textContent = `You clicked on ${cityName}`;
-      popupBox.style.display = 'block';
-    }
-  </script>
+    // Function to add a city to the list
+    const cities = [];
+
+// Function to add a city to the list
+function addCity() {
+  const cityInput = document.getElementById('cityInput');
+  const cityName = cityInput.value.trim(); // Get the trimmed value from the input
+
+  if (cityName) {
+    // Only add if the input is not empty
+    const cityList = document.getElementById('cityList');
+    const newCityItem = document.createElement('li');
+    newCityItem.className = 'city';
+    newCityItem.textContent = cityName;
+    
+    // Create a delete button for the new city
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'delete-button';
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+      deleteCity(this);
+    };
+
+    // Append the city and delete button to the list
+    newCityItem.appendChild(deleteButton);
+    cityList.appendChild(newCityItem);
+
+    // Add the city to the list
+    cities.push(cityName);
+
+    // Clear the input field
+    cityInput.value = '';
+  }
+}
+
+// Function to delete a city from the list
+function deleteCity(deleteButton) {
+  const listItem = deleteButton.parentElement;
+  const cityName = listItem.textContent.trim(); // Get the city name to be deleted
+  const cityIndex = cities.indexOf(cityName);
+
+  if (cityIndex !== -1) {
+    cities.splice(cityIndex, 1); // Remove the city from the list
+  }
+
+  const cityList = document.getElementById('cityList');
+  cityList.removeChild(listItem);
+}
+
+// Attach the addCity function to the button click event
+const addButton = document.getElementById('addButton');
+addButton.addEventListener('click', addCity);
+</script>
   <script src="/server.js" type="module"></script>
 </body>
 

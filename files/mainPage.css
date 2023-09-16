@@ -63,6 +63,7 @@ button{
     position: relative;
     overflow: hidden;
 }
+
 span{
     background: #539fe3;
     height: 100%;
@@ -152,20 +153,27 @@ column-gap: 20px;
 }
 .mytabs {
     display: flex;
+    margin: 10px;
     flex-wrap: wrap;
-    width: 800px;
+    max-width: 400px;
+    /*width: 800px;
     height:450px;
     margin: 20px ;
-    padding: 0px;
+    padding: 0;*/
 }
+
 .mytabs input[type="radio"] {
     display: none;
+
 }
 .mytabs label {
-    padding: 25px;
+    padding: 10px;
+    width: 100px;
     background: #e2e2e2;
     font-weight: bold;
     border-radius: 25px;
+    text-align: center;
+    cursor: pointer;
 }
 
 .mytabs .tab {
@@ -180,7 +188,7 @@ column-gap: 20px;
 }
 
 .mytabs input[type='radio']:checked + label + .tab {
-    display: block;
+    display: initial;
 }
 
 .mytabs input[type="radio"]:checked + label {

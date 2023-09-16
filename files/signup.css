@@ -96,9 +96,10 @@ h1 {
     margin-bottom: 20px;
 }
 
+.registerbox input[type="name"],
 .registerbox input[type="email"],
-.registerbox input[type="password"],
-.registerbox input[type="text"] {
+.registerbox input[type="password"]
+ {
     border: none;
     border-bottom: 1px solid #fff;
     background: transparent;
