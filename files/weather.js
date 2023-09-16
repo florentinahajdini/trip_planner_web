@@ -17,7 +17,7 @@ fetch("/weather?city=" + city)
         console.log(data["temperature"])
 
         temperature.innerHTML = data["temperature"];
-        wind.innerHTML = data["wind"];
+        wind.innerHTML = data["wind"] + "%";
         city.innerHTML = data["city"];
         day.innerHTML = data["day"];
         humidity.innerHTML = data["humidity"];
