@@ -75,7 +75,12 @@
       </div>
     </div>
   </div>
-  <script>
+
+  <script src="/server.js" type="module"></script>
+  <script src="/api.js" type="module"></script>
+  <script src="/client.js"></script>
+  
+<script>
     // Function to add a city to the list
     const cities = [];
 
@@ -90,7 +95,7 @@ function addCity() {
     const newCityItem = document.createElement('li');
     newCityItem.className = 'city';
     newCityItem.textContent = cityName;
-    
+
     // Create a delete button for the new city
     const deleteButton = document.createElement('button');
     deleteButton.className = 'delete-button';
@@ -129,12 +134,6 @@ function deleteCity(deleteButton) {
 const addButton = document.getElementById('addButton');
 addButton.addEventListener('click', addCity);
 </script>
-  <script src="/server.js" type="module"></script>
-  <script src="/api.js" type="module"></script>
-  <script async
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4ePiIwnNBHH2sOTJylXzNfiAlWt0w-IY&libraries=places&callback=initMap">
-</script>
-
 <script>
   var searchInput= 'cityInput';
   $(document).ready(function(){
