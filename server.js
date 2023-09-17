@@ -129,6 +129,7 @@ app.post('/add-trip', (req, res)=>{
   }
   const userTrips = trips.get(userId);
   userTrips.push(tripDetails);
+  console.log(userTrips);
 
   res.status(200).json({message: 'Trip added successfully'});
 });
