@@ -79,9 +79,21 @@
             </div>
           </div>
           <input type="radio" id="tabCurrency" name="mytabs">
-          <label for="tabCurrency">Currency</label>
+          <label for="tabCurrency">Tasks</label>
           <div class="tab">
-            <h2>Currency</h2>
+            <h2></h2>
+            <div class="todo-app">
+              <h2>To-Do-List <img src="../graphics/todolist.png"> </h2>
+              <div class="row">
+                <input type="text" id ="input-box" placeholder="Add your tasks">
+                <button onclick="addTask()" id="todoButton">Add</button>
+              </div>
+              <ul id="list-container">
+                <!--<li class="checked">Task 1</li>
+                <li>Task 2</li>
+                <li>Task 2</li>-->
+              </ul>
+            </div>
           </div>
         </div>
       </div>
@@ -91,6 +103,49 @@
   <script src="/server.js" type="module"></script>
   <script src="/api.js" type="module"></script>
   <script src="/client.js"></script>
+
+  <script> 
+
+  // Declare inputBox and listContainer variables outside the functions
+const inputBox = document.getElementById('input-box');
+const listContainer = document.getElementById('list-container');
+
+// Function to add a task to the list
+function addTask() {
+  const taskName = inputBox.value.trim(); // Get the trimmed value from the input
+
+  if (taskName) {
+    // Only add if the input is not empty
+    const newTaskItem = document.createElement('li');
+    newTaskItem.textContent = taskName;
+
+    // Create a delete button for the new task
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+      deleteTask(this);
+    };
+
+    // Append the task and delete button to the list
+    newTaskItem.appendChild(deleteButton);
+    listContainer.appendChild(newTaskItem);
+
+    // Clear the input field
+    inputBox.value = '';
+  }
+}
+
+// Function to delete a task from the list
+function deleteTask(deleteButton) {
+  const listItem = deleteButton.parentElement;
+  listContainer.removeChild(listItem);
+}
+
+// Attach the addTask function to the button click event
+const todoButton = document.getElementById('todoButton');
+todoButton.addEventListener('click', addTask);
+
+  </script>
   
 <script>
     // Function to add a city to the list
