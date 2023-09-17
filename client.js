@@ -7,13 +7,26 @@ loginButton.addEventListener('click', function () {
     window.location.href = 'login.html'; // Replace with the actual URL of the login page
 });
 
+/*
+const inputBox= document.getElementById('input-box');
+const listContainer= document.getElementById('list-container');
 
+function addTask(){
+  if(inputBox.value === ''){
+    alert('you must write a task')
+  }
+  else{
+    let li= document.createElement("li");
+    li.innerHTML= inputBox.value;
+    listContainer.appendChild(li);
+  }
+}*/
 // ADD CITY BUTTON
-/*function addCity() {
-  const cityInput = document.getElementById('cityInput');
-  const cityName = cityInput.value.trim();
+/*function addTAask() {
+  const inputBox = document.getElementById('input-box');
+  const listContainer= document.getElementById('list-container');
 
-  console.log('addCity function called');
+  console.log('addTask function called');
 
   if (cityName) {
     // Create a new trip object
