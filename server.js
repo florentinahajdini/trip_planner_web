@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require("path");
-
 const axios = require("axios").default;
-
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const passport = require('passport');
@@ -11,9 +9,11 @@ const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
+const todoModel = require("./todo-model.js");
 
 const users = [];
 const trips = new Map();
+const task = []; // data model to store the list of tasks
 
 
 
@@ -175,6 +175,53 @@ app.get("/weather", async (req, res) => {
      })
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
+
+// Endpoints for Todo List
+app.delete("/todo/:taskId", function (req, res) {
+  const taskId = req.params.taskId;
+  
+  // Find the task by its ID in the tasks array
+  const taskIndex = tasks.findIndex(task => task.id === taskId);
+  
+  if (taskIndex !== -1) {
+    tasks.splice(taskIndex, 1); // Remove the task
+    res.status(204).send(); // Send a successful response with no content
+  } else {
+    res.status(404).json({ error: `No resource with id ${id} exists. Delete not possible.` });
+  }
+});
+
+app.put(req, res) => {
+  /* Updates a resource. If successful, sends back status 200. */
+  const id = +req.params.id;
+
+  if (!model.get(id)) {
+      res.status(404).send(`No resource with id ${id} exists. Update not possible.`);
+  } else {
+      const resource = req.body;
+      model.update(id, resource);
+      res.sendStatus(200);
+  }
+}
+// Update endpoint for tasks
+app.put('/todo/:taskId', function (req, res) {
+  const taskId = req.params.taskId;
+  const { newTaskName } = req.body;
+
+  // Find the task by its ID in the tasks array
+  const taskIndex = tasks.findIndex(task => task.id === taskId);
+
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = newTaskName; // Update the task name
+    res.status(200).send('Task updated successfully');
+  } else {
+    res.status(404).send(`No resource with id ${id} exists. Update not possible.`);
+  }
+});
+
+
+
+
 
 app.listen(3003, (error) => {
   if (error) {
