@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trip Planner</title>
   <link rel="stylesheet" href="mainPage.css">
+
+  <style>
+  </style>
+  <script src="weather.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Google Maps JavaScript library -->
@@ -50,18 +54,27 @@
             <h2></h2>
             <div class="weather">
               <input type="search" class="weather_search" id="query" placeholder="Your City">
-              <input value="GetWeather" id="button" onclick="updateWeather()" type="submit">
+              <input value="GetWeather" id="button" type="submit">
               <div class="weather_today">
                 <div class="weather_details">
                   <h2 class="weather_city" id="weather_city">City</h2>
                   <p class="weather_day" id="weather_day">Day</p>
                   <div class="weather_current">
-                    <p class="weather_indicator weather_indicator--humidity"><span class="value" id="humidity">50</span>%</p>
-                    <p class="weather_indicator weather_indicator--wind"><span class="value" id="wind">West, 5</span>m/s</p>
-                    <p class="weather_indicator weather_indicator--pressure"><span class="value" id="pressure">1050</span>hPA</p>
+                    <p class="weather_indicator weather_indicator--humidity" id="humidity">
+                      Humidity:<span class="value">100 %</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--wind" id="wind">
+                      Wind speed: <span class="value">5 m/s</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--pressure" id="pressure">
+                      Pressure: <span class="value">1050 hPA</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--temperature" id="temperature">
+                      Temperature: <span class="value">+25</span> &deg;C
+                    </p>
                   </div>
                   <img src="" alt="Clear sky" class="weather_image">
-                  <img src="../graphics/weather.jpeg" class="weather-icons"><span class="value" id="temperature">+25</span> &deg;C
+                  <img src="../graphics/weather.jpeg" class="weather-icons">
                 </div>
               </div>
             </div>
@@ -84,51 +97,54 @@
     // Function to add a city to the list
     const cities = [];
 
-// Function to add a city to the list
-function addCity() {
-  const cityInput = document.getElementById('cityInput');
-  const cityName = cityInput.value.trim(); // Get the trimmed value from the input
+  // Function to add a city to the list
+  function addCity() {
+    const cityInput = document.getElementById('cityInput');
+    const cityName = cityInput.value.trim(); // Get the trimmed value from the input
 
-  if (cityName) {
-    // Only add if the input is not empty
+    if (cityName) {
+      // Only add if the input is not empty
+      const cityList = document.getElementById('cityList');
+      const newCityItem = document.createElement('li');
+      newCityItem.className = 'city';
+      newCityItem.textContent = cityName;
+      
+      // Create a delete button for the new city
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'delete-button';
+      deleteButton.textContent = 'Delete';
+      deleteButton.onclick = function() {
+        deleteCity(this);
+      };
+
+
+      // Append the city and delete button to the list
+      newCityItem.appendChild(deleteButton);
+      cityList.appendChild(newCityItem);
+
+      // Add the city to the list
+      cities.push(cityName);
+
+      // Clear the input field
+      cityInput.value = '';
+    }
+  }
+
+  // Function to delete a city from the list
+  function deleteCity(deleteButton) {
+    const listItem = deleteButton.parentElement;
+    const cityName = listItem.textContent.trim(); // Get the city name to be deleted
+    const cityIndex = cities.indexOf(cityName);
+
+    if (cityIndex !== -1) {
+      cities.splice(cityIndex, 1); // Remove the city from the list
+    }
+
     const cityList = document.getElementById('cityList');
-    const newCityItem = document.createElement('li');
-    newCityItem.className = 'city';
-    newCityItem.textContent = cityName;
-
-    // Create a delete button for the new city
-    const deleteButton = document.createElement('button');
-    deleteButton.className = 'delete-button';
-    deleteButton.textContent = 'Delete';
-    deleteButton.onclick = function() {
-      deleteCity(this);
-    };
-
-    // Append the city and delete button to the list
-    newCityItem.appendChild(deleteButton);
-    cityList.appendChild(newCityItem);
-
-    // Add the city to the list
-    cities.push(cityName);
-
-    // Clear the input field
-    cityInput.value = '';
-  }
-}
-
-// Function to delete a city from the list
-function deleteCity(deleteButton) {
-  const listItem = deleteButton.parentElement;
-  const cityName = listItem.textContent.trim(); // Get the city name to be deleted
-  const cityIndex = cities.indexOf(cityName);
-
-  if (cityIndex !== -1) {
-    cities.splice(cityIndex, 1); // Remove the city from the list
+    cityList.removeChild(listItem);
   }
 
-  const cityList = document.getElementById('cityList');
-  cityList.removeChild(listItem);
-}
+
 
 // Attach the addCity function to the button click event
 const addButton = document.getElementById('addButton');

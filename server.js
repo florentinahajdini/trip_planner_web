@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const path = require("path");
+
+const axios = require("axios").default;
+
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const passport = require('passport');
@@ -11,6 +14,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const users = [];
 const trips = new Map();
+
 
 
 app.use(express.json());
@@ -149,6 +153,30 @@ function checkNotAuthenticated(req, res, next) {
   }
   next();
 }
+
+//Weather endpoint fetches Weater API data: weather.js
+app.get("/weather", async (req, res) => {
+   
+  const weatherAPIKey = "6ff36079724c0020a2809278b13da9ac";
+  const city = req.query.city;     // query parameter to get city
+  
+  axios.get("https://api.openweathermap.org/data/2.5/weather?units=metric&appid=" + weatherAPIKey + "&q=" + city)
+     .then(result => {   
+        let filteredweatherData = {
+           "temperature": result.data.main.temp,
+           "wind": result.data.wind.speed,
+           "city": result.data.name,
+           "day": new Date().toLocaleDateString('en-EN', {"weekday": "long"}),
+           "humidity": result.data.main.humidity,
+           "pressure": result.data.main.pressure
+        };         
+        res.json(JSON.stringify(filteredweatherData))
+        console.log(result.data);
+     })
+     .catch((error) => console.error("Fetch weather API data error:", error));
+});
+
+
 
 app.listen(3003, (error) => {
   if (error) {
