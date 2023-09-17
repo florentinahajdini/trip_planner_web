@@ -10,7 +10,11 @@ const passport = require('passport');
 const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
-const users = [{name: "Ting"}];
+const LocalStrategy = require('passport-local').Strategy;
+
+const users = [];
+const trips = new Map();
+
 
 
 app.use(express.json());
@@ -53,6 +57,17 @@ app.get('/mainPage', checkAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, 'files', 'mainPage.html'));
 });
 
+
+// GET USERS TRIPS 
+
+app.get('/my-trips', (req,res) => {
+  const userId = req.session.passport.user; 
+  const userTrips = trips.get(userId) || [];
+
+  res.status(200).json(userTrips);
+})
+
+
 // CHECKING IF USER IS AUTHENTICATED BEFORE SWITCH
 app.use('/mainPage', (req, res, next) => {
   if (!req.session.user) {
@@ -60,6 +75,9 @@ app.use('/mainPage', (req, res, next) => {
   }
   next();
 });
+
+
+
 
 app.use(flash());
 app.use(express.urlencoded({ extended: false }));
@@ -82,17 +100,40 @@ app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
 app.post('/signup', checkNotAuthenticated, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    users.push({
+    const newUser={ 
       id: Date.now().toString(),
       name: req.body.name,
       email: req.body.email,
       password: hashedPassword
-    });
-    res.redirect('/login'); // Redirect to the login page after successful signup
+    };
+    users.push(newUser);
+    res.login(newUser, (err)=>{
+      if(err){
+        return next(err);
+      }
+    return res.redirect('/mainPage');
+    }); // Redirect to the login page after successful signup
   } catch {
-    res.redirect('/signup');
+    res.redirect('/login');
   }
 });
+
+// POST A TRIP 
+app.post('/add-trip', (req, res)=>{
+  const userId= req.session.passport.user; //getting ID from session
+  const tripDetails = req.body.tripDetails; 
+
+  //creating array for trips 
+  if(!trips.has(userId)){
+  trips.set(userId, []);
+  }
+  const userTrips = trips.get(userId);
+  userTrips.push(tripDetails);
+
+  res.status(200).json({message: 'Trip added successfully'});
+});
+
+
 
 app.delete('/logout', (req, res) => {
   req.logOut();
