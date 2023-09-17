@@ -10,7 +10,7 @@ const passport = require('passport');
 const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
-const users = [];
+const users = [{name: "Ting"}];
 
 
 app.use(express.json());
@@ -26,10 +26,10 @@ app.use(express.static(path.join(__dirname, 'files')));
 // Serve image files from the "graphics" directory
 app.use('/graphics', express.static(path.join(__dirname, 'graphics')));
 
-// Passport Configuration
+// User Authendication for Login: Passport Configuration
 initializePassport(
   passport,
-  email => users.find(user => user.email === email),
+  email => users.find(user => user.email === email), //find user based on e-mail: user e-mail equal to email we passed in
   id => users.find(user => user.id === id)
 );
 
@@ -63,8 +63,8 @@ app.use('/mainPage', (req, res, next) => {
 
 app.use(flash());
 app.use(express.urlencoded({ extended: false }));
-app.use(session({
-  secret: '123test123',
+app.use(session({ // take options
+  secret: '123test123', //key we want to keep secret: encrypt all of information for us
   resave: false,
   saveUninitialized: false,
 }));
@@ -134,8 +134,6 @@ app.get("/weather", async (req, res) => {
      })
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
-
-
 
 app.listen(3003, (error) => {
   if (error) {
