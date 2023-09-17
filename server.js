@@ -12,7 +12,18 @@ const flash = require('express-flash');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
 
-const users = [];
+const fs = require('fs');
+let usersRaw;
+let users = [];
+fs.readFile('./files/users.json', 'utf-8', (err, jsonString) => {
+  if (err) {
+    console.log(err);
+  } else {
+    usersRaw = jsonString;
+    users = JSON.parse(usersRaw.toString());
+    console.log('users read');
+  }
+});
 const trips = new Map();
 
 
@@ -106,6 +117,7 @@ app.post('/signup', checkNotAuthenticated, async (req, res) => {
       email: req.body.email,
       password: hashedPassword
     };
+    console.log(JSON.stringify(newUser));
     users.push(newUser);
     res.login(newUser, (err)=>{
       if(err){
@@ -114,6 +126,11 @@ app.post('/signup', checkNotAuthenticated, async (req, res) => {
     return res.redirect('/mainPage');
     }); // Redirect to the login page after successful signup
   } catch {
+    const data = JSON.stringify(users, null, 2);
+    fs.writeFile('./files/users.json', data, 'utf-8', (err) => {
+      if (err) throw err;
+      console.log('users written successfully');
+    });
     res.redirect('/login');
   }
 });
