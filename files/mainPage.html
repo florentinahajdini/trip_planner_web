@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip Planner</title>
+  <link rel="stylesheet" href="mainPage.css">
+
+  <style>
+  </style>
+  <script src="weather.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Google Maps JavaScript library -->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&key=AIzaSyC4ePiIwnNBHH2sOTJylXzNfiAlWt0w-IY"></script>
+
+</head>
+
+<body>
+  <div class="banner">
+    <div class="navbar">
+      <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
+      <ul>
+        <li><a href="index.html">Logout</a></li>
+      </ul>
+    </div>
+    <div class="container">
+      <div class="left-box">
+        <h3>Your destinations</h3><br>
+        <div class="search">
+          <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
+          <div id="citySuggestions" class="city-suggestions"></div>
+          <button class="add-button" id="addButton">Add Trip</button>
+        </div>
+        <ul id="cityList" class="city-list">
+          <!-- City items will be added dynamically here -->
+        </ul>
+      </div>
+
+      <div class="right-box">
+        <div class="popup_box"></div>
+        <div class="mytabs">
+          <input type="radio" id="tabBookings" name="mytabs" checked="checked">
+          <label for="tabBookings">Bookings</label>
+          <div class="tab">
+            <h2></h2>
+            <iframe id="myPdf" src="../graphics/barcelonaBooking.pdf" frameborder="0"></iframe>
+          </div>
+          <input type="radio" id="tabWeather" name="mytabs">
+          <label for="tabWeather">Weather</label>
+          <div class="tab">
+            <h2></h2>
+            <div class="weather">
+              <input type="search" class="weather_search" id="query" placeholder="Your City">
+              <input value="GetWeather" id="button" type="submit">
+              <div class="weather_today">
+                <div class="weather_details">
+                  <h2 class="weather_city" id="weather_city">City</h2>
+                  <p class="weather_day" id="weather_day">Day</p>
+                  <div class="weather_current">
+                    <p class="weather_indicator weather_indicator--humidity" id="humidity">
+                      Humidity:<span class="value">100 %</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--wind" id="wind">
+                      Wind speed: <span class="value">5 m/s</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--pressure" id="pressure">
+                      Pressure: <span class="value">1050 hPA</span>
+                    </p>
+                    <p class="weather_indicator weather_indicator--temperature" id="temperature">
+                      Temperature: <span class="value">+25</span> &deg;C
+                    </p>
+                  </div>
+                  <img src="" alt="Clear sky" class="weather_image">
+                  <img src="../graphics/weather.jpeg" class="weather-icons">
+                </div>
+              </div>
+            </div>
+          </div>
+          <input type="radio" id="tabCurrency" name="mytabs">
+          <label for="tabCurrency">Tasks</label>
+          <div class="tab">
+            <h2></h2>
+            <div class="todo-app">
+              <h2>To-Do-List <img src="../graphics/todolist.png"> </h2>
+              <div class="row">
+                <input type="text" id ="input-box" placeholder="Add your tasks">
+                <button onclick="addTask()" id="todoButton">Add</button>
+              </div>
+              <ul id="list-container">
+                <!--<li class="checked">Task 1</li>
+                <li>Task 2</li>
+                <li>Task 2</li>-->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/server.js" type="module"></script>
+  <script src="/api.js" type="module"></script>
+  <script src="/client.js"></script>
+
+  <script> 
+
+  // Declare inputBox and listContainer variables outside the functions
+const inputBox = document.getElementById('input-box');
+const listContainer = document.getElementById('list-container');
+
+// Function to add a task to the list
+function addTask() {
+  const taskName = inputBox.value.trim(); // Get the trimmed value from the input
+
+  if (taskName) {
+    // Only add if the input is not empty
+    const newTaskItem = document.createElement('li');
+    newTaskItem.textContent = taskName;
+
+    // Create a delete button for the new task
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+      deleteTask(this);
+    };
+
+    // Append the task and delete button to the list
+    newTaskItem.appendChild(deleteButton);
+    listContainer.appendChild(newTaskItem);
+
+    // Clear the input field
+    inputBox.value = '';
+  }
+}
+
+// Function to delete a task from the list
+function deleteTask(deleteButton) {
+  const listItem = deleteButton.parentElement;
+  listContainer.removeChild(listItem);
+}
+
+// Attach the addTask function to the button click event
+const todoButton = document.getElementById('todoButton');
+todoButton.addEventListener('click', addTask);
+
+  </script>
+  
+<script>
+    // Function to add a city to the list
+    const cities = [];
+
+  // Function to add a city to the list
+  function addCity() {
+    const cityInput = document.getElementById('cityInput');
+    const cityName = cityInput.value.trim(); // Get the trimmed value from the input
+
+    if (cityName) {
+      // Only add if the input is not empty
+      const cityList = document.getElementById('cityList');
+      const newCityItem = document.createElement('li');
+      newCityItem.className = 'city';
+      newCityItem.textContent = cityName;
+      
+      // Create a delete button for the new city
+      const deleteButton = document.createElement('button');
+      deleteButton.className = 'delete-button';
+      deleteButton.textContent = 'Delete';
+      deleteButton.onclick = function() {
+        deleteCity(this);
+      };
+
+
+      // Append the city and delete button to the list
+      newCityItem.appendChild(deleteButton);
+      cityList.appendChild(newCityItem);
+
+      // Add the city to the list
+      cities.push(cityName);
+
+      // Clear the input field
+      cityInput.value = '';
+    }
+  }
+
+  // Function to delete a city from the list
+  function deleteCity(deleteButton) {
+    const listItem = deleteButton.parentElement;
+    const cityName = listItem.textContent.trim(); // Get the city name to be deleted
+    const cityIndex = cities.indexOf(cityName);
+
+    if (cityIndex !== -1) {
+      cities.splice(cityIndex, 1); // Remove the city from the list
+    }
+
+    const cityList = document.getElementById('cityList');
+    cityList.removeChild(listItem);
+  }
+
+
+
+// Attach the addCity function to the button click event
+const addButton = document.getElementById('addButton');
+addButton.addEventListener('click', addCity);
+</script>
+<script>
+  var searchInput= 'cityInput';
+  $(document).ready(function(){
+    var autocomplete;
+    autocomplete = new google.maps.places.Autocomplete((document.getElementById('cityInput')),{
+      types: ['geocode'],
+    
+    });
+    google.maps.event.addListener(autocomplete, 'place_changed', function(){
+      var near_place = autocomplete.getPlace();
+    });
+  }); 
+</script>
+</body>
+
+</html>
