@@ -177,7 +177,10 @@ app.get("/weather", async (req, res) => {
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
 
-
+//EDIT WITH PUT 
+app.put("/editTask", (req, res) => {
+  res.sendStatus(200);
+});
 
 app.listen(3003, (error) => {
   if (error) {
