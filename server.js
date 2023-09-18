@@ -129,6 +129,7 @@ app.post('/add-trip', (req, res)=>{
   }
   const userTrips = trips.get(userId);
   userTrips.push(tripDetails);
+  console.log(userTrips);
 
   res.status(200).json({message: 'Trip added successfully'});
 });
@@ -196,6 +197,9 @@ app.put('/todo/:taskID', function (req, res) { //url:ID?
     todoModel[req.params.taskID] = req.body;
     res.sendStatus(201).json(todoModel[req.params.taskID])
   }
+//EDIT WITH PUT 
+app.put("/editTask", (req, res) => {
+  res.sendStatus(200);
 });
 
 app.listen(3003, (error) => {
