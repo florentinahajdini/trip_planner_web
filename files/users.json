@@ -1,14 +1,20 @@
 [
   {
-    "id": "1694977300568",
-    "name": "test1",
-    "email": "test1@test.test",
-    "password": "$2b$10$tRWQuNazRY2VSvU0f9WA3.cVkP126lHdx/4MZHh41tXOtCyC4EpXu"
-  },
-  {
     "id": "1694977696034",
     "name": "test1",
     "email": "test1@test.test",
     "password": "$2b$10$b2ymE0bkIb46GjBdQZmQVuOxseGTGxwPw6elsHjDM5L4sWe.AgMN2"
+  },
+  {
+    "id": "1694981032344",
+    "name": "admin",
+    "email": "admin@root.com",
+    "password": "$2b$10$uxbCUemDkvz1VbIhNxJdWO8AcID3MEHOSimQ7Uk5LstHvTk/loMCS"
+  },
+  {
+    "id": "1695037996706",
+    "name": "test2",
+    "email": "test2@test.test",
+    "password": "$2b$10$TSZxzkCbXUd72vPE1C.NfelnjAHMCJC7YzsPvSrVMIhO6bdOA9nGG"
   }
 ]
