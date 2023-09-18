@@ -6,11 +6,8 @@ const axios = require("axios").default;
 
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const passport = require('passport');
-const initializePassport = require('./passport-config');
-const flash = require('express-flash');
-const methodOverride = require('method-override');
-const LocalStrategy = require('passport-local').Strategy;
+const FileStore = require('session-file-store')(session);
+const cookieParser = require('cookie-parser');
 
 const fs = require('fs');
 let usersRaw;
@@ -25,15 +22,30 @@ fs.readFile('./files/users.json', 'utf-8', (err, jsonString) => {
   }
 });
 const trips = new Map();
+app.use(cookieParser('cookie key'));
 
 
-
+/*
+ * Change details of session: secret could be an .env variable, saveUninitialized prevents unwanted users to be saved,
+ * cookie maxAge specifies time after which cookie will be removed/renewed, store specifies storage middleware for cookies
+ */
 app.use(express.json());
-app.use(session({
-  secret: '123test123',
-  resave: false,
-  saveUninitialized: false,
-}));
+app.use(
+    session({
+      secret: 'secret key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {maxAge: 3600},
+    })
+);
+
+const isAuth = (req, res, next) => {
+  if (req.session.isAuthenticated) {
+    return next();
+  } else {
+    res.redirect('/login');
+  }
+}
 
 // Serve HTML files from the "files" directory
 app.use(express.static(path.join(__dirname, 'files')));
@@ -41,17 +53,9 @@ app.use(express.static(path.join(__dirname, 'files')));
 // Serve image files from the "graphics" directory
 app.use('/graphics', express.static(path.join(__dirname, 'graphics')));
 
-// Passport Configuration
-initializePassport(
-  passport,
-  email => users.find(user => user.email === email),
-  id => users.find(user => user.id === id)
-);
-
 // Serve the login page when /login is accessed
 app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, 'files', 'login.html'));
-  console.log('LOGIN PRESSED');
 });
 
 // Serve the SIGNUP page when /SIGNUP is accessed
@@ -60,11 +64,8 @@ app.get('/signup', (req, res) => {
 });
 
 // NOW ACTUALLY SERVE MAINPAGE WHEN PRESSING LOGIN
-app.get('/mainPage', (req, res) => {
-  res.sendFile(path.join(__dirname, 'files', 'mainPage.html'));
-});
 
-app.get('/mainPage', checkAuthenticated, (req, res) => {
+app.get('/mainPage', isAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'files', 'mainPage.html'));
 });
 
@@ -78,38 +79,36 @@ app.get('/my-trips', (req,res) => {
   res.status(200).json(userTrips);
 })
 
+app.get('/user', (req, res) => {
+    return res.send(req.session.user);
+})
 
-// CHECKING IF USER IS AUTHENTICATED BEFORE SWITCH
-app.use('/mainPage', (req, res, next) => {
-  if (!req.session.user) {
-    return res.redirect('/login');
-  }
-  next();
-});
-
-
-
-
-app.use(flash());
 app.use(express.urlencoded({ extended: false }));
-app.use(session({
-  secret: '123test123',
-  resave: false,
-  saveUninitialized: false,
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(methodOverride('_method'));
 
-// Passport authentication routes
-app.post('/login', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/mainPage',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+app.post('/login',  (req, res) => {
+    const {email, password} = req.body;
 
-app.post('/signup', checkNotAuthenticated, async (req, res) => {
+    let user = users.find(u => u.email === email);
+
+    if (!user) {
+        return res.redirect('/login');
+    }
+
+    const isMatch = bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return res.redirect('/login');
+    } else {
+        req.session.isAuthenticated = true;
+        req.session.user = user;
+        res.redirect('/mainPage');
+    }
+});
+// TODO change body
+app.post('/signup', async (req, res) => {
   try {
+      if (users.find((user) => user.email === req.body.email)) {
+          return res.redirect('/signup');
+      }
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const newUser={ 
       id: Date.now().toString(),
@@ -119,25 +118,20 @@ app.post('/signup', checkNotAuthenticated, async (req, res) => {
     };
     console.log(JSON.stringify(newUser));
     users.push(newUser);
-    res.login(newUser, (err)=>{
-      if(err){
-        return next(err);
-      }
-    return res.redirect('/mainPage');
-    }); // Redirect to the login page after successful signup
+      const data = JSON.stringify(users, null, 2);
+      fs.writeFile('./files/users.json', data, 'utf-8', (err) => {
+          if (err) throw err;
+          console.log('users written successfully');
+      });
+      res.redirect('/login');
   } catch {
-    const data = JSON.stringify(users, null, 2);
-    fs.writeFile('./files/users.json', data, 'utf-8', (err) => {
-      if (err) throw err;
-      console.log('users written successfully');
-    });
-    res.redirect('/login');
+    res.redirect('/signup');
   }
 });
 
 // POST A TRIP 
 app.post('/add-trip', (req, res)=>{
-  const userId= req.session.passport.user; //getting ID from session
+  const userId= req.session.user.id; //getting ID from session
   const tripDetails = req.body.tripDetails; 
 
   //creating array for trips 
@@ -152,26 +146,12 @@ app.post('/add-trip', (req, res)=>{
 
 
 
-app.delete('/logout', (req, res) => {
-  req.logOut();
+app.get('/logout', (req, res) => {
+  req.session.destroy();
   res.redirect('/login');
 });
 
-function checkAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.redirect('/login');
-}
-
-function checkNotAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return res.redirect('/mainPage');
-  }
-  next();
-}
-
-//Weather endpoint fetches Weater API data: weather.js
+//Weather endpoint fetches Weather API data: weather.js
 app.get("/weather", async (req, res) => {
    
   const weatherAPIKey = "6ff36079724c0020a2809278b13da9ac";
