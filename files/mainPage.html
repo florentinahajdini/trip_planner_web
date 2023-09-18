@@ -10,7 +10,7 @@
   <style>
   </style>
   <script src="weather.js"></script>
-  <script src="edit.js"></script>
+  <script src="buttons.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Google Maps JavaScript library -->
@@ -119,6 +119,10 @@ function addTask() {
     // Only add if the input is not empty
     const newTaskItem = document.createElement('li');
     newTaskItem.textContent = taskName;
+    //Textfield
+    const textfield = document.createElement("input");
+    textfield.type = "text";
+    textfield.id = "textfield";
 
     // Create a delete button for the new task
     const deleteButton = document.createElement('button');
@@ -148,24 +152,21 @@ function addTask() {
     editButton.textContent = 'Edit';
     editButton.id = "editBtn"
     editButton.onclick = async function() {
+    };
 
-      const response = await fetch(`/todo/${resource.id}`, {  //url
-        method: "DELETE",
-      })
-        .then (response => {
-          if (!response.ok){
-            throw new Error("Delete not accomplished")
-          }})
-          delete(data) // funktion
-          console.log("Resource deleted successfully.")
-        .catch (error => {
-          console.error("Network error: ",error)
-        })
+    
+    // Create a delete button for the new task
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Save';
+    editButton.id = "saveBtn"
+    deleteButton.onclick = function() {
+      saveTask(this);
     };
 
     // Append the task and delete button to the list
     newTaskItem.appendChild(deleteButton);
     newTaskItem.appendChild(editButton);
+    newTaskItem.appendChild(textfield);
     listContainer.appendChild(newTaskItem);
 
     // Clear the input field
@@ -179,27 +180,27 @@ function deleteTask(deleteButton) {
   listContainer.removeChild(listItem);
 }
 
-// //Fetch for POST: todo
-// createButton.addEventListener("click", async () => {
-//       const response = await fetch("...", { //url
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify(newResource) //data
-//       })
-//       .then (response => {
-//         if (!response.ok){
-//           console.log("Process error for adding data.")
-//         }})
-//         const createdResource = await response.json();      //
-//         add(Object.assign(new Resource(), createdResource));  //add resource function
+//Fetch for POST: todo
+createButton.addEventListener("click", async () => {
+      const response = await fetch("...", { //url
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newResource) //data
+      })
+      .then (response => {
+        if (!response.ok){
+          console.log("Process error for adding data.")
+        }})
+        const createdResource = await response.json();      //
+        add(Object.assign(new Resource(), createdResource));  //add resource function
 
-//         console.log("Resource added successfully.")
-//       .catch (error => {
-//         console.error("Network error: ", error)
-//       })
-//     })
+        console.log("Resource added successfully.")
+      .catch (error => {
+        console.error("Network error: ", error)
+      })
+    })
 
 // //Fetch for PUT
 

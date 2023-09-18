@@ -9,7 +9,7 @@ const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
-const userToDo = require("./todo-model.js");
+const todoModel = require("./todo-model.js");
 
 const users = [];
 const trips = new Map();
@@ -177,39 +177,26 @@ app.get("/weather", async (req, res) => {
 });
 
 // Endpoints for Todo List
-app.delete("/todo/:taskId", function (req, res) {
+app.delete("/todo/:taskId", function (req, res) { //url:ID?
   const taskId = req.params.taskId;
-  
-  // Find the task by its ID in the tasks array
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-  
-  if (taskIndex !== -1) {
-    tasks.splice(taskIndex, 1); // Remove the task
-    res.status(204).send(); // Send a successful response with no content
+  if (taskId in todoModel) {
+    delete todoModel[taskId]
+    res.sendStatus(200);
   } else {
-    res.status(404).json({ error: `No resource with id ${id} exists. Delete not possible.` });
-  }
+      res.sendStatus(404);
+  } 
 });
 
 // Update endpoint for tasks
-app.put('/todo/:taskId', function (req, res) {
-  const taskId = req.params.taskId;
-  const newTaskName = req.body.newTaskName;
-
-  // Find the task by its ID in the tasks array
-  const taskIndex = tasks.findIndex(task => task.id === taskId);
-
-  if (taskIndex !== -1) {
-    tasks[taskIndex] = newTaskName; // Update the task name
-    res.status(200).send('Task updated successfully');
-  } else {
-    res.status(404).send(`No resource with id ${id} exists. Update not possible.`);
+app.put('/todo/:taskID', function (req, res) { //url:ID?
+  if(todoModel[req.params.taskID]){
+    todoModel[req.params.taskID] = req.body;
+    res.sendStatus(200)
+  }else{
+    todoModel[req.params.taskID] = req.body;
+    res.sendStatus(201).json(todoModel[req.params.taskID])
   }
 });
-
-
-
-
 
 app.listen(3003, (error) => {
   if (error) {
