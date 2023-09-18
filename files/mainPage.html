@@ -10,7 +10,7 @@
   <style>
   </style>
   <script src="weather.js"></script>
-  <script src="buttons.js"></script>
+
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Google Maps JavaScript library -->
@@ -108,6 +108,8 @@
   <script src="/client.js"></script>
 
   <script>
+  
+  const todoCounter = 0;
 
   // Declare inputBox and listContainer variables outside the functions
 const inputBox = document.getElementById('input-box');
@@ -124,52 +126,21 @@ function addTask() {
     //Textfield
     const textfield = document.createElement("input");
     textfield.type = "text";
-    textfield.id = "textfield";
+    textfield.id = todoCounter;
 
-    // Create a delete button for the new task
+    // Create a edit button for the new task
     const editButton = document.createElement("button");
-editButton.textContent = "Edit";
- editButton.onclick = function () {
+    editButton.textContent = "Edit";
+    editButton.onclick = function () {
             editTask(this, taskName);
           };
-newTaskItem.appendChild(editButton);
+    newTaskItem.appendChild(editButton);
 
+    // Create a delete button for the new task
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = function() {
       deleteTask(this);
-    };
-  
-    // deleteButton.addEventListener("click", async () => {
-    //   deleteTask(this);
-    //   const response = await fetch(`/todo/${resource.id}`, {  //url
-    //     method: "DELETE",
-    //   })
-    //     .then (response => {
-    //       if (!response.ok){
-    //         throw new Error("Delete not accomplished")
-    //       }})
-    //       delete(data) //
-    //       console.log("Resource deleted successfully.")
-    //     .catch (error => {
-    //       console.error("Network error: ",error)
-    //     })
-    // // })
-
-    // Create a edit button for the new task
-    const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
-    editButton.id = "editBtn"
-    editButton.onclick = async function() {
-    };
-
-    
-    // Create a delete button for the new task
-    const saveButton = document.createElement('button');
-    saveButton.textContent = 'Save';
-    editButton.id = "saveBtn"
-    deleteButton.onclick = function() {
-      saveTask(this);
     };
 
     // Append the task and delete button to the list
@@ -189,38 +160,11 @@ function deleteTask(deleteButton) {
   listContainer.removeChild(listItem);
 }
 
-//Fetch for POST: todo
-createButton.addEventListener("click", async () => {
-      const response = await fetch("...", { //url
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(newResource) //data
-      })
-      .then (response => {
-        if (!response.ok){
-          console.log("Process error for adding data.")
-        }})
-        const createdResource = await response.json();      //
-        add(Object.assign(new Resource(), createdResource));  //add resource function
-
-        console.log("Resource added successfully.")
-      .catch (error => {
-        console.error("Network error: ", error)
-      })
-    })
-
-// //Fetch for PUT
-
-
-
-
-
 function editTask(editButton, taskItem) {
         const listItem = editButton.parentElement;
         const taskName = taskItem;
         const editInput = document.createElement("input");
+        editInput.id = "editedtext"
         editInput.type = "text";
         editInput.value = taskName;
 
@@ -238,16 +182,27 @@ function editTask(editButton, taskItem) {
       }
 
       function saveEditedTask(saveButton) {
-        fetch("/editTask", {
+
+        const listItem = editButton.parentElement;
+        const taskName = taskItem;
+        const editInput = document.createElement("input");
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : editInput.value
+        }
+
+        fetch(`/editTask/${resource.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ saveButton }),
+          body: JSON.stringify(fetchBody),
         })
           .then((response) => {
             if (response.ok) {
               console.log("Task edited successfully.");
+
               const listItem = saveButton.parentElement;
               const editInput = listItem.querySelector("input");
               const newTaskName = editInput.value.trim();

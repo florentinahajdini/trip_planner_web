@@ -9,11 +9,11 @@ const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
-const todoModel = require("./todo-model.js");
+//const todoModel = require("./todo-model.js");
 
 const users = [];
 const trips = new Map();
-const task = []; // data model to store the list of tasks
+const userTodo = []; // data model to store the list of tasks
 
 
 
@@ -177,28 +177,35 @@ app.get("/weather", async (req, res) => {
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
 
-// Endpoints for Todo List
-app.delete("/todo/:taskId", function (req, res) { //url:ID?
-  const taskId = req.params.taskId;
-  if (taskId in todoModel) {
-    delete todoModel[taskId]
-    res.sendStatus(200);
-  } else {
-      res.sendStatus(404);
-  } 
-});
-
 // Update endpoint for tasks
-app.put('/todo/:taskID', function (req, res) { //url:ID?
-  if(todoModel[req.params.taskID]){
-    todoModel[req.params.taskID] = req.body;
-    res.sendStatus(200)
-  }else{
-    todoModel[req.params.taskID] = req.body;
-    res.sendStatus(201).json(todoModel[req.params.taskID])
-  }
+// app.put('/editTask', function (req, res) { //url:ID?
+//   if (!model.get(id)) {
+//     res.status(404).send(`No resource with id ${id} exists. Update not possible.`);
+//   } else {
+//     const resource = req.body;
+//     model.update(id, resource);
+//     console.log("Data updated successfully.")
+//     res.sendStatus(200);
+//   }
+// })
+
 //EDIT WITH PUT 
+// app.put("/editTask", (req, res) => {
+//   res.sendStatus(200);
+// });
+
 app.put("/editTask", (req, res) => {
+  const taskID = req.body["id"];
+  const task = req.body["task"];
+  if (userTodo.length <= taskID) {  //add
+    userTodo.push(task)
+  } else if (userTodo.length > taskID){ //update
+    if (task === "") {
+      userTodo.splice(taskID, 1)
+  } else {
+    userTodo[taskID] = task
+  }
+} 
   res.sendStatus(200);
 });
 
@@ -209,3 +216,16 @@ app.listen(3003, (error) => {
     console.log(`Server now listening on http://localhost:3003`);
   }
 });
+
+
+// Endpoints for Todo List
+// app.delete("/todo/:taskId", function (req, res) { //url:ID?
+//   const taskId = req.params.taskId;
+//   if (taskId in todoModel) {
+//     delete todoModel[taskId]
+//     res.sendStatus(200);
+//   } else {
+//       res.sendStatus(404);
+//   } 
+// });
+
