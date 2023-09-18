@@ -13,11 +13,13 @@ const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
 
 const users = [];
+const userTodo = [];
 const trips = new Map();
 
 
 
 app.use(express.json());
+app.use(express.urlencoded({extended: false}))
 app.use(session({
   secret: '123test123',
   resave: false,
@@ -177,8 +179,27 @@ app.get("/weather", async (req, res) => {
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
 
-//EDIT WITH PUT 
+// EDIT WITH PUT 
+// app.put("/editTask", (req, res) => {
+//   res.sendStatus(200);
+// });
+
 app.put("/editTask", (req, res) => {
+  const taskID = Number(req.body["taskID"]);
+  const task = req.body["task"];
+  console.log(taskID)
+  console.log(task)
+  console.log(req.body)
+  if (userTodo.length <= taskID) {  //add
+    userTodo.push(task)
+  } else if (userTodo.length > taskID){ //update
+    if (task === "") {
+      userTodo.splice(taskID, 1)
+  } else {
+    userTodo[taskID] = task
+  }
+} 
+  console.log(userTodo)
   res.sendStatus(200);
 });
 
