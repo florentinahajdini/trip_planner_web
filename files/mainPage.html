@@ -107,7 +107,7 @@
   <script src="/client.js"></script>
 
   <script> 
-
+  const todoCounter = 0;
   // Declare inputBox and listContainer variables outside the functions
 const inputBox = document.getElementById('input-box');
 const listContainer = document.getElementById('list-container');
@@ -120,14 +120,16 @@ function addTask() {
     // Only add if the input is not empty
     const newTaskItem = document.createElement('li');
     newTaskItem.textContent = taskName;
+    newTaskItem.id = todoCounter;
 
     // Create a delete button for the new task
     const editButton = document.createElement("button");
-editButton.textContent = "Edit";
- editButton.onclick = function () {
+    editButton.textContent = "Edit";
+    //editButton.id = "editBtn";
+    editButton.onclick = function () {
             editTask(this, taskName);
           };
-newTaskItem.appendChild(editButton);
+    newTaskItem.appendChild(editButton);
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
@@ -142,11 +144,41 @@ newTaskItem.appendChild(editButton);
     // Clear the input field
     inputBox.value = '';
   }
+
+  const listItem = deleteButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : ""
+        }
+
+        fetch("/editTask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fetchBody),
+        })
 }
 
 // Function to delete a task from the list
 function deleteTask(deleteButton) {
-  const listItem = deleteButton.parentElement;
+
+  const editInput = deleteButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : ""
+        }
+
+        fetch("/editTask", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fetchBody),
+        })
+        
   listContainer.removeChild(listItem);
 }
 
@@ -170,13 +202,22 @@ function editTask(editButton, taskItem) {
         listItem.appendChild(saveButton);
       }
 
-      function saveEditedTask(saveButton) {
+      function saveEditedTask(saveButton) {        
+        
+        const editInput = saveButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : editInput.textContent
+        }
+
+      
         fetch("/editTask", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ saveButton }),
+          body: JSON.stringify(fetchBody),
         })
           .then((response) => {
             if (response.ok) {
