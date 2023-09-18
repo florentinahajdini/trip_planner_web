@@ -23,12 +23,14 @@
       <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
       <ul>
         <li><a href="index.html">Logout</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
       </ul>
     </div>
     <div class="container">
       <div class="left-box">
         <h3>Your destinations</h3><br>
         <div class="search">
+          
           <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
           <div id="citySuggestions" class="city-suggestions"></div>
           <button class="add-button" id="addButton">Add Trip</button>
@@ -39,7 +41,7 @@
       </div>
 
       <div class="right-box">
-        <div class="popup_box"></div>
+    
         <div class="mytabs">
           <input type="radio" id="tabBookings" name="mytabs" checked="checked">
           <label for="tabBookings">Bookings</label>
@@ -167,6 +169,8 @@ todoButton.addEventListener('click', addTask);
       const deleteButton = document.createElement('button');
       deleteButton.className = 'delete-button';
       deleteButton.textContent = 'Delete';
+      deleteButton.id = 'deleteButton';
+
       deleteButton.onclick = function() {
         deleteCity(this);
       };
@@ -198,6 +202,23 @@ todoButton.addEventListener('click', addTask);
     cityList.removeChild(listItem);
   }
 
+fetch('/deleteCityEndpoint', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ city: cityName }),
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('City deleted successfully.');
+      } else {
+        console.error('Failed to delete city.');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
 
 
 // Attach the addCity function to the button click event
