@@ -129,6 +129,7 @@ app.post('/add-trip', (req, res)=>{
   }
   const userTrips = trips.get(userId);
   userTrips.push(tripDetails);
+  console.log(userTrips);
 
   res.status(200).json({message: 'Trip added successfully'});
 });
@@ -176,7 +177,11 @@ app.get("/weather", async (req, res) => {
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
 
-
+app.delete('/delete-city', (res,req) => {
+  const cityName = req.body.cityName;
+  delete cityName[req.body.id]
+  res.status(200)
+})
 
 app.listen(3003, (error) => {
   if (error) {
