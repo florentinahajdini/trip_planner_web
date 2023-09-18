@@ -9,7 +9,7 @@ const initializePassport = require('./passport-config');
 const flash = require('express-flash');
 const methodOverride = require('method-override');
 const LocalStrategy = require('passport-local').Strategy;
-const todoModel = require("./todo-model.js");
+const userToDo = require("./todo-model.js");
 
 const users = [];
 const trips = new Map();
@@ -191,22 +191,10 @@ app.delete("/todo/:taskId", function (req, res) {
   }
 });
 
-app.put(req, res) => {
-  /* Updates a resource. If successful, sends back status 200. */
-  const id = +req.params.id;
-
-  if (!model.get(id)) {
-      res.status(404).send(`No resource with id ${id} exists. Update not possible.`);
-  } else {
-      const resource = req.body;
-      model.update(id, resource);
-      res.sendStatus(200);
-  }
-}
 // Update endpoint for tasks
 app.put('/todo/:taskId', function (req, res) {
   const taskId = req.params.taskId;
-  const { newTaskName } = req.body;
+  const newTaskName = req.body.newTaskName;
 
   // Find the task by its ID in the tasks array
   const taskIndex = tasks.findIndex(task => task.id === taskId);
