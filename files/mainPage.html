@@ -103,7 +103,7 @@
   </div>
 
   <script> 
-  const todoCounter = 0;
+  let todoCounter = 0;
   // Declare inputBox and listContainer variables outside the functions
 const inputBox = document.getElementById('input-box');
 const listContainer = document.getElementById('list-container');
@@ -114,9 +114,9 @@ function addTask() {
 
   if (taskName) {
     // Only add if the input is not empty
-    const newTaskItem = document.createElement('li');
+    let newTaskItem = document.createElement('li');
     newTaskItem.textContent = taskName;
-    newTaskItem.id = todoCounter;
+    newTaskItem.id = (todoCounter.toString());
 
     // Create a delete button for the new task
     const editButton = document.createElement("button");
@@ -141,11 +141,11 @@ function addTask() {
     inputBox.value = '';
   }
 
-  const listItem = deleteButton.parentElement;
+  const listItem = listContainer.getElementById(todoCounter.toString());
 
         const fetchBody = {
-          taskID : Number(editInput.id),
-          task : ""
+          taskID : Number(listItem.id),
+          task : listItem.textContent
         }
 
         fetch("/editTask", {
@@ -314,8 +314,8 @@ const addButton = document.getElementById('addButton');
 addButton.addEventListener('click', addCity);
 </script>
 <script>
-var searchInput= 'cityInput';
-$(document).ready(function(){
+  const searchInput = 'cityInput';
+  $(document).ready(function(){
   var autocomplete;
   autocomplete = new google.maps.places.Autocomplete((document.getElementById('cityInput')),{
     types: ['geocode'],

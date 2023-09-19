@@ -56,8 +56,9 @@
                     password: password
                 })
                     .then(function(response) {
-                        if (response.status === 200) {
-                            window.location.href = response.request.responseURL;
+                        if (response.status === (200 || 304)) {
+
+                            //window.location.href = response.request.responseURL;
                         } else {
                             alert('Authentication failed. Please check your credentials and try again.');
                         }

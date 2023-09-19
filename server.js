@@ -47,11 +47,7 @@ app.use(
 );
 
 const isAuth = (req, res, next) => {
-  if (req.session.user) {
-    return next();
-  } else {
-    res.redirect('/login');
-  }
+
 }
 
 
@@ -73,8 +69,24 @@ app.get('/signup', (req, res) => {
 
 // NOW ACTUALLY SERVE MAINPAGE WHEN PRESSING LOGIN
 
-app.get('/mainPage', isAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, 'files', 'mainPage.html'));
+app.get('/mainPage', (req, res) => {
+    if (req.session.user) {
+        res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+        res.type('html');
+        res.status(200).sendFile(path.join(__dirname, 'files', 'mainPage.html'));
+    } else {
+        res.redirect('/login');
+    }
+});
+
+app.get('/userID', (req, res) => {
+    if (req.session.user) {
+        const userId = req.session.user.id;
+        res.status(200).json(userId);
+    } else {
+        res.redirect('/login');
+    }
+
 });
 
 
@@ -107,11 +119,11 @@ app.post('/login',  (req, res) => {
     if (!isMatch) {
         res.status(401).json({success: false});
     } else {
-        req.session.user = { id: user.id, username: user.username };
-        res.redirect('/mainPage');
+        req.session.user = { id: user.id, name: user.name };
+        res.status(302).redirect('/mainPage');
     }
 });
-// TODO change body
+
 app.post('/signup', async (req, res) => {
   try {
       if (users.find((user) => user.email === req.body.email)) {
