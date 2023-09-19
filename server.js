@@ -7,12 +7,15 @@ const axios = require("axios").default;
 
 const bcrypt = require('bcrypt');
 const session = require('express-session');
+
 const FileStore = require('session-file-store')(session);
 const cookieParser = require('cookie-parser');
 
 const fs = require('fs');
 let usersRaw;
 let users = [];
+const userTodo = [];
+
 fs.readFile('./files/users.json', 'utf-8', (err, jsonString) => {
   if (err) {
     console.log(err);
@@ -22,6 +25,7 @@ fs.readFile('./files/users.json', 'utf-8', (err, jsonString) => {
     console.log('users read');
   }
 });
+
 const trips = new Map();
 app.use(cookieParser('cookie key'));
 
@@ -32,6 +36,7 @@ app.use(cookieParser('cookie key'));
  */
 app.use(cors());
 app.use(express.json());
+
 app.use(
     session({
       secret: 'secret key',
@@ -48,6 +53,7 @@ const isAuth = (req, res, next) => {
     res.redirect('/login');
   }
 }
+
 
 // Serve HTML files from the "files" directory
 app.use(express.static(path.join(__dirname, 'files')));
@@ -142,6 +148,7 @@ app.post('/add-trip', (req, res)=>{
   }
   const userTrips = trips.get(userId);
   userTrips.push(tripDetails);
+  console.log(userTrips);
 
   res.status(200).json({message: 'Trip added successfully'});
 });
@@ -175,7 +182,29 @@ app.get("/weather", async (req, res) => {
      .catch((error) => console.error("Fetch weather API data error:", error));
 });
 
+// EDIT WITH PUT 
+// app.put("/editTask", (req, res) => {
+//   res.sendStatus(200);
+// });
 
+app.put("/editTask", (req, res) => {
+  const taskID = Number(req.body["taskID"]);
+  const task = req.body["task"];
+  console.log(taskID)
+  console.log(task)
+  console.log(req.body)
+  if (userTodo.length <= taskID) {  //add
+    userTodo.push(task)
+  } else if (userTodo.length > taskID){ //update
+    if (task === "") {
+      userTodo.splice(taskID, 1)
+  } else {
+    userTodo[taskID] = task
+  }
+} 
+  console.log(userTodo)
+  res.sendStatus(200);
+});
 
 app.listen(3003, (error) => {
   if (error) {

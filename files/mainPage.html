@@ -23,12 +23,14 @@
       <img src="../graphics/TripPlannerLogosmall.png" alt="TripPlannerLogo" class="logo">
       <ul>
         <li><a href="index.html">Logout</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
       </ul>
     </div>
     <div class="container">
       <div class="left-box">
         <h3>Your destinations</h3><br>
         <div class="search">
+          
           <input type="text" id="cityInput" placeholder="Enter city name" spellcheck="false">
           <div id="citySuggestions" class="city-suggestions"></div>
           <button class="add-button" id="addButton">Add Trip</button>
@@ -39,7 +41,7 @@
       </div>
 
       <div class="right-box">
-        <div class="popup_box"></div>
+    
         <div class="mytabs">
           <input type="radio" id="tabBookings" name="mytabs" checked="checked">
           <label for="tabBookings">Bookings</label>
@@ -101,7 +103,7 @@
   </div>
 
   <script> 
-
+  const todoCounter = 0;
   // Declare inputBox and listContainer variables outside the functions
 const inputBox = document.getElementById('input-box');
 const listContainer = document.getElementById('list-container');
@@ -114,8 +116,17 @@ function addTask() {
     // Only add if the input is not empty
     const newTaskItem = document.createElement('li');
     newTaskItem.textContent = taskName;
+    newTaskItem.id = todoCounter;
 
     // Create a delete button for the new task
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
+    //editButton.id = "editBtn";
+    editButton.onclick = function () {
+            editTask(this, taskName);
+          };
+    newTaskItem.appendChild(editButton);
+
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = function() {
@@ -129,14 +140,117 @@ function addTask() {
     // Clear the input field
     inputBox.value = '';
   }
+
+  const listItem = deleteButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : ""
+        }
+
+        fetch("/editTask", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fetchBody),
+        })
 }
 
 // Function to delete a task from the list
 function deleteTask(deleteButton) {
-  const listItem = deleteButton.parentElement;
+
+  const editInput = deleteButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : ""
+        }
+
+        fetch("/editTask", {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fetchBody),
+        })
+        
   listContainer.removeChild(listItem);
 }
 
+function editTask(editButton, taskItem) {
+        const listItem = editButton.parentElement;
+        const taskName = taskItem;
+        const editInput = document.createElement("input");
+        editInput.type = "text";
+        editInput.value = taskName;
+
+        // Create a save button for editing
+        const saveButton = document.createElement("button");
+        saveButton.textContent = "Save";
+        saveButton.onclick = function () {
+          saveEditedTask(this);
+        };
+
+        // Replace the task's text with the input field and save button
+        listItem.innerHTML = "";
+        listItem.appendChild(editInput);
+        listItem.appendChild(saveButton);
+      }
+
+      function saveEditedTask(saveButton) {        
+        
+        const editInput = saveButton.parentElement;
+
+        const fetchBody = {
+          taskID : Number(editInput.id),
+          task : editInput.textContent
+        }
+
+      
+        fetch("/editTask", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(fetchBody),
+        })
+          .then((response) => {
+            if (response.ok) {
+              console.log("Task edited successfully.");
+              const listItem = saveButton.parentElement;
+              const editInput = listItem.querySelector("input");
+              const newTaskName = editInput.value.trim();
+
+              if (newTaskName) {
+                listItem.textContent = newTaskName;
+
+                // Create a delete button for the edited task
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "Delete";
+                deleteButton.onclick = function () {
+                  deleteTask(this);
+                };
+
+                // Create an edit button for the edited task
+                const editButton = document.createElement("button");
+                editButton.textContent = "Edit";
+                editButton.onclick = function () {
+                  editTask(this);
+                };
+
+                // Append the edited task, edit button, and delete button back to the list
+                listItem.appendChild(deleteButton);
+                listItem.appendChild(editButton);
+              }
+            } else {
+              console.error("Failed to edit task.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
 // Attach the addTask function to the button click event
 const todoButton = document.getElementById('todoButton');
 todoButton.addEventListener('click', addTask);
@@ -144,55 +258,54 @@ todoButton.addEventListener('click', addTask);
   </script>
   
 <script>
-    // Function to add a city to the list
-    const cities = [];
+ const cities = [];
 
-  // Function to add a city to the list
-  function addCity() {
-    const cityInput = document.getElementById('cityInput');
-    const cityName = cityInput.value.trim(); // Get the trimmed value from the input
+// Function to add a city to the list
+function addCity() {
+  const cityInput = document.getElementById('cityInput');
+  const cityName = cityInput.value.trim(); // Get the trimmed value from the input
 
-    if (cityName) {
-      // Only add if the input is not empty
-      const cityList = document.getElementById('cityList');
-      const newCityItem = document.createElement('li');
-      newCityItem.className = 'city';
-      newCityItem.textContent = cityName;
-      
-      // Create a delete button for the new city
-      const deleteButton = document.createElement('button');
-      deleteButton.className = 'delete-button';
-      deleteButton.textContent = 'Delete';
-      deleteButton.onclick = function() {
-        deleteCity(this);
-      };
-
-
-      // Append the city and delete button to the list
-      newCityItem.appendChild(deleteButton);
-      cityList.appendChild(newCityItem);
-
-      // Add the city to the list
-      cities.push(cityName);
-
-      // Clear the input field
-      cityInput.value = '';
-    }
-  }
-
-  // Function to delete a city from the list
-  function deleteCity(deleteButton) {
-    const listItem = deleteButton.parentElement;
-    const cityName = listItem.textContent.trim(); // Get the city name to be deleted
-    const cityIndex = cities.indexOf(cityName);
-
-    if (cityIndex !== -1) {
-      cities.splice(cityIndex, 1); // Remove the city from the list
-    }
-
+  if (cityName) {
+    // Only add if the input is not empty
     const cityList = document.getElementById('cityList');
-    cityList.removeChild(listItem);
+    const newCityItem = document.createElement('li');
+    newCityItem.className = 'city';
+    newCityItem.textContent = cityName;
+    
+    // Create a delete button for the new city
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'delete-button';
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function() {
+      deleteCity(this);
+    };
+
+
+    // Append the city and delete button to the list
+    newCityItem.appendChild(deleteButton);
+    cityList.appendChild(newCityItem);
+
+    // Add the city to the list
+    cities.push(cityName);
+
+    // Clear the input field
+    cityInput.value = '';
   }
+}
+
+// Function to delete a city from the list
+function deleteCity(deleteButton) {
+  const listItem = deleteButton.parentElement;
+  const cityName = listItem.textContent.trim(); // Get the city name to be deleted
+  const cityIndex = cities.indexOf(cityName);
+
+  if (cityIndex !== -1) {
+    cities.splice(cityIndex, 1); // Remove the city from the list
+  }
+
+  const cityList = document.getElementById('cityList');
+  cityList.removeChild(listItem);
+}
 
 
 
@@ -201,17 +314,17 @@ const addButton = document.getElementById('addButton');
 addButton.addEventListener('click', addCity);
 </script>
 <script>
-  var searchInput= 'cityInput';
-  $(document).ready(function(){
-    var autocomplete;
-    autocomplete = new google.maps.places.Autocomplete((document.getElementById('cityInput')),{
-      types: ['geocode'],
-    
-    });
-    google.maps.event.addListener(autocomplete, 'place_changed', function(){
-      var near_place = autocomplete.getPlace();
-    });
-  }); 
+var searchInput= 'cityInput';
+$(document).ready(function(){
+  var autocomplete;
+  autocomplete = new google.maps.places.Autocomplete((document.getElementById('cityInput')),{
+    types: ['geocode'],
+  
+  });
+  google.maps.event.addListener(autocomplete, 'place_changed', function(){
+    var near_place = autocomplete.getPlace();
+  });
+}); 
 </script>
 </body>
 
