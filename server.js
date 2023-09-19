@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const path = require("path");
+const cors = require('cors');
 
 const axios = require("axios").default;
 
@@ -29,6 +30,7 @@ app.use(cookieParser('cookie key'));
  * Change details of session: secret could be an .env variable, saveUninitialized prevents unwanted users to be saved,
  * cookie maxAge specifies time after which cookie will be removed/renewed, store specifies storage middleware for cookies
  */
+app.use(cors());
 app.use(express.json());
 app.use(
     session({
@@ -40,7 +42,7 @@ app.use(
 );
 
 const isAuth = (req, res, next) => {
-  if (req.session.isAuthenticated) {
+  if (req.session.user) {
     return next();
   } else {
     res.redirect('/login');
@@ -86,20 +88,20 @@ app.get('/user', (req, res) => {
 app.use(express.urlencoded({ extended: false }));
 
 app.post('/login',  (req, res) => {
-    const {email, password} = req.body;
+    const email = req.body.username;
+    const password = req.body.password;
 
-    let user = users.find(u => u.email === email);
+    const user = users.find(u => u.email === email);
 
     if (!user) {
-        return res.redirect('/login');
+        res.json({ success: false });
     }
 
     const isMatch = bcrypt.compare(password, user.password);
     if (!isMatch) {
-        return res.redirect('/login');
+        res.status(401).json({success: false});
     } else {
-        req.session.isAuthenticated = true;
-        req.session.user = user;
+        req.session.user = { id: user.id, username: user.username };
         res.redirect('/mainPage');
     }
 });
